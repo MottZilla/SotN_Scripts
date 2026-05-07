@@ -2,6 +2,7 @@
 	CV SotN - Start Anywhere
 	by: MottZilla
 	July 7th 2024
+	Updated May 7th 2026 with migration_helpers for newer Biz versions
 ]]--
 
 ChosenStage = 0x1F
@@ -102,6 +103,23 @@ end
 formStartAnywhere = forms.newform(340,90,"Set Starting Location",StartAnywhereWindowClosed)
 dropdownLocations = forms.dropdown(formStartAnywhere,LocationNameTable,4,4,160,200)
 dropdownName = forms.dropdown(formStartAnywhere,StaticText,230,4,80,20)
+
+-- Fix Annoying Warning Messages on Bizhawk 2.9 and above.
+BizVersion = client.getversion()
+if(bizstring.contains(BizVersion,"2.9")) then
+    bit = (require "migration_helpers").EmuHawk_pre_2_9_bit();
+end
+if(bizstring.contains(BizVersion,"2.10")) then
+    bit = (require "migration_helpers").EmuHawk_pre_2_9_bit();
+end
+if(bizstring.contains(BizVersion,"2.11")) then
+    bit = (require "migration_helpers").EmuHawk_pre_2_9_bit();
+end
+
+while StartAnywhereCloseSignal == 0 do
+	if(memory.read_u8(0x974A0) == 0x45) then SetStage() end
+	emu.frameadvance();
+end
 
 while StartAnywhereCloseSignal == 0 do
 	if(memory.read_u8(0x974A0) == 0x45) then SetStage() end
